@@ -14,7 +14,8 @@ const UserSchema = new Schema({
 	canAcceptRequest: { type: Boolean, default: true },
 	
 	/*frenelyn*/
-	friends: { type: Array, default: [] }
+	friends: { type: Array, default: [] },
+	isLoggedIn: { type: Boolean, default: false }
 });
 
 mongoose.model('User', UserSchema);

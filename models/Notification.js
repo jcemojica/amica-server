@@ -1,18 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const ObjectIdSchema = Schema.ObjectId;
-var ObjectId = mongoose.Types.ObjectId;
 
 const NotificationSchema = new Schema({
-	actor: { type: ObjectIdSchema, default: function() {return new ObjectId()} },
-	receiver: { type: ObjectIdSchema, default: function() {return new ObjectId()} },
-	verb: { type: String, default: '' }, //commented, requested, posted, liked
+	actor: { type: Schema.Types.ObjectId, ref: 'User', required: true},
+	receiver: { type: Schema.Types.ObjectId, ref: 'User', required: true},
+	verb: { type: String, required: true }, //commented, requested, posted, liked
 	
-	//these ids might contain null if not applicable to the verb
-	postid: { type: ObjectIdSchema, default: function() {return new ObjectId()} },
-	commentid: { type: ObjectIdSchema, default: function() {return new ObjectId()} },
-	requestid: { type: ObjectIdSchema, default: function() {return new ObjectId()} },
-	likeid: { type: ObjectIdSchema, default: function() {return new ObjectId()} }
+	//these ids might contain nothing if not applicable to the verb
+	postid: { type: Schema.Types.ObjectId, ref: 'Post' },
+	commentid: { type: Schema.Types.ObjectId, ref: 'Comment' },
+	requestid: { type: Schema.Types.ObjectId, ref: 'FriendRequest' },
+	isRead: { type: Boolean, default: false, required: true }
 });
 
 mongoose.model('Notification', NotificationSchema);

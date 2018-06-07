@@ -7,7 +7,6 @@ exports.addUser = (req, res) => {
   newUser.save((err, user) => {
     if (err) { 
       res.send({}); 
-      res.status(505).send(err);
     }
     else {
       res.json(user);
@@ -17,7 +16,7 @@ exports.addUser = (req, res) => {
 
 /*purpose: find duplicates*/
 exports.findByEmail = (req, res) => {
-  const email = req.body.email;
+  const email = req.params.email;
 
   User.findOne({ email }, (err, user) => {
     if(err){
@@ -29,62 +28,17 @@ exports.findByEmail = (req, res) => {
   })
 }
 
-/*view the current user for login (temp)*/
-exports.findCurrentUser = (req, res) => {
+/*update user attributes*/
+exports.updateUser = (req, res) => {
   const id = req.body._id;
-  const email = req.body.email;
-  const pw = req.body.password;
-
-  User.findOne({ email, password }, (err, user) => {
-    if (err) {
-      console.log(err);
-      res.status(404).send(err);
-    } else {
-      res.send(user);
-    }
-  });
-}
-
-/*update basic details: name, about, birthday*/
-exports.updateBasicDetails = (req, res) => {
-  const id = req.params._id;
   const newDetails = req.body;
 
-  User.findByIdAndUpdate({id}, {newDetails}, (err, user) => {
+  User.findOneAndUpdate({ id }, { newDetails }, {}, (err, user) => {
     if(err) {
       console.log(err);
       res.status(404).send(err);
     }else{
       res.send(user)
-    }
-  })
-}
-
-/*edit isSearchable, canAcceptRequest*/
-exports.changeSettings = (req, res) => {
-  const id = req.params._id;
-  const settings = req.body;
-
-  User.findByIdAndUpdate({id}, {settings}, (err, user) =>{
-    if(err){
-      console.log(err);
-      res.status(404).send(err);
-    }else{
-      res.send(user);
-    }
-  })
-}
-
-/*return friends*/
-exports.getFriends = (req, res) => {
-  const email = req.params.email;
-
-  User.find({email}, (err, user) => {
-    if(err){
-      console.log(err);
-      res.status(404).send(err);
-    } else{
-      res.send(user.friends)
     }
   })
 }
@@ -107,6 +61,18 @@ exports.findByName = (req, res) => {
       res.send(searchable);
     }
   });
+}
+
+exports.findLoggedIn = (req, res) => {
+
+  User.findOne({ isLoggedIn: true }, (err, user) => {
+    if(err){
+      console.log(err);
+      res.send({});
+    }else{
+      res.send(user);
+    }
+  })
 }
 
 /*tester*/
